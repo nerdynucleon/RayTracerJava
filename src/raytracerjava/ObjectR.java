@@ -12,6 +12,8 @@ import java.util.ArrayList;
  * @author Alexandre
  */
 public class ObjectR {
+    private int n;
+    private double ks;
     private Color c;
     private double kd;
     private double ka;
@@ -43,5 +45,18 @@ public class ObjectR {
     public double ka(){
         return ka;
     }
+    public void setN(int n){
+        this.n = n;
+    }
+    public int n(){
+        return n;
+    }
+    public void setKS(double ks){
+        this.ks = ks;
+    }
+    public double ks(){
+        return ks;
+    }
+
     
 }

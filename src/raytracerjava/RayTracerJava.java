@@ -21,6 +21,7 @@ public class RayTracerJava {
     public static Color background = new Color(135, 135, 135);
     public static Color sphere = new Color(255, 0, 0);
     public static Color black = new Color(0, 0, 0);
+    public static Camera cam;
 
     /**
      * @param args the command line arguments
@@ -36,7 +37,7 @@ public class RayTracerJava {
         Plane pl = new Plane(planeDim);
         Point pt = new Point(eyeDim);
         //Create Camera
-        Camera cam = new Camera(pl, pt, w, h);
+        cam = new Camera(pl, pt, w, h);
         //Set Camera Frame
         cam.setTopDir(topDim, .001);
         //CreateObjects
@@ -45,8 +46,10 @@ public class RayTracerJava {
         s1.setColor(sphere);
         s1.setKA(0.1);
         s1.setKD(0.9);
+        s1.setKS(1);
+        s1.setN(100);
         //Lighting
-        double[] l1Dim = {0, 200, 0};
+        double[] l1Dim = {200, 200, 200};
         Light l1 = new Light(l1Dim);
 
         //Main Render Loop
@@ -74,10 +77,10 @@ public class RayTracerJava {
                      Ray shadow = new Ray(pt.coord, s.dim);
                      for(ObjectR oShadow : ObjectR.objects){
                          if(!Light.lights.contains(oShadow) && oShadow.intersect(shadow) != null){
-                             return diffuse(o, pt, s);
+                             return shade(o, pt, s, cam);
                          }
                      }
-                    return diffuse(o, pt, s);
+                    return shade(o, pt, s, cam);
                 }
             }
         }
@@ -91,18 +94,22 @@ public class RayTracerJava {
         return o.kd() * factor + o.ka();
 
     }
-    public static int[] specular(ObjectR o, Point p, Light l, Camera c){
-        int[] rgb = new int[3];
+    public static double specular(ObjectR o, Point p, Light l, Camera c){
         double[] norm = calc.normalize(o.normal(p));
         double[] eye = calc.normalize(calc.sub(c.point.coord, p.coord));
         double[] light = calc.normalize(calc.sub(l.dim, p.coord));
         double[] h = calc.normalize(calc.add(eye, light));
         double factor = calc.dot(norm, h);
         factor = Math.max(factor, 0);
-        rgb[0] = (int) (o.kd() * factor * o.color().getRed() + o.ka() * o.color().getRed());
-        return rgb;
+        return o.ks() * Math.pow(factor, o.n());
     }
-    public static Color shade(ObjectR o, Point p, Light l){
-        
+    public static Color shade(ObjectR o, Point p, Light l, Camera cam){
+        double c1 = diffuse(o, p, l);
+        c1 += specular(o, p, l, cam);
+        Color c = o.color();
+        int r = Math.min(255, (int)(c.getRed()*c1));
+        int g = Math.min(255, (int)(c.getGreen()*c1));
+        int b = Math.min(255, (int)(c.getBlue()*c1));
+        return new Color(r,g,b);
     }
 }
