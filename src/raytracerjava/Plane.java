@@ -32,4 +32,19 @@ public class Plane extends ObjectR {
         coord[2] = dim[2] * -dim[3]/denom;
         return new Point(coord);
     }
+    public Point intersect(Ray r){
+        double numerator = calc.dot(calc.sub(pointNearOrigin().coord, r.org),normal);
+        double denom = calc.dot(r.dir, normal);
+        if(numerator == 0){
+            return new Point(r.org);
+        } else if (denom == 0){
+            return null;
+        } else {
+            double d = numerator/denom;
+            if(d < 0){
+                return null;
+            }
+            return new Point(calc.add(calc.scale(d, r.dir),r.org));
+        }
+    } 
 }

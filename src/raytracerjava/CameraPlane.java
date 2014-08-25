@@ -13,5 +13,6 @@ package raytracerjava;
 public class CameraPlane extends Plane {
     public CameraPlane(double[] dim){
         super(dim);
+        objects.remove(this);
     }
 }

@@ -27,7 +27,7 @@ public class ObjectR {
     public void setColor(Color c){
         this.c = c;
     }
-    public Color color(){
+    public Color color(Point p){
         return c;
     }
     public double[] normal(Point p){

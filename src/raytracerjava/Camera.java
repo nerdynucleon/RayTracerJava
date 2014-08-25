@@ -21,7 +21,7 @@ public class Camera {
     boolean wEven;
     boolean hEven;
     //RenderPlane
-    private Plane plane;
+    private CameraPlane plane;
     private double space;
     //Dimensions of RenderPlane
     private Point cent;
@@ -29,7 +29,7 @@ public class Camera {
     private double[] rightRelativeCent;
     private double topLength;
     private double rightLength;
-    public Camera(Plane pl, Point pt, int w, int h){
+    public Camera(CameraPlane pl, Point pt, int w, int h){
         plane = pl;
         point = pt;
         this.w = w;
